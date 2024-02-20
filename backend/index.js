@@ -8,7 +8,13 @@ const multer = require('multer');
 const path = require('path');
 const cors = require('cors');
 app.use(express.json());
-app.use(cors());
+
+app.use(cors({
+    origin: 'https://shopperfronten.onrender.com/',
+    methods: ['GET', 'POST'],
+    credentials: true // If your frontend sends credentials (e.g., cookies)
+}));
+
 
 //Database connection with Mongodb
 mongoose.connect(process.env.MONGO_CONNECTION)
@@ -41,9 +47,9 @@ const upload = multer({storage:storage})
 
 //Creating uplaod end point for images
 
-app.use('https://ecommerce-shopper-q8yh.onrender.com/images',express.static('upload/images'))
+app.use('/images',express.static('upload/images'))
 
-app.post('https://ecommerce-shopper-q8yh.onrender.com/upload',upload.single('product'),(req,res)=>{
+app.post('/upload',upload.single('product'),(req,res)=>{
     res.json({
         success:1,
         image_url:`https://localhost:${port}/images/${req.file.filename}`
@@ -88,7 +94,7 @@ const Product = mongoose.model("Product",{
     },
 })
 
-app.post('https://ecommerce-shopper-q8yh.onrender.com/addproduct',async(req,res)=>{
+app.post('/addproduct',async(req,res)=>{
     let products = await Product.find({});
     let id;
     if(products.length>0){
@@ -118,7 +124,7 @@ app.post('https://ecommerce-shopper-q8yh.onrender.com/addproduct',async(req,res)
 
 //Creating API for deleting products
 
-app.post('https://ecommerce-shopper-q8yh.onrender.com/removeproduct',async(req,res)=>{
+app.post('/removeproduct',async(req,res)=>{
     await Product.findOneAndDelete({id:req.body.id})
     console.log('Removed');
     res.json({
@@ -129,7 +135,7 @@ app.post('https://ecommerce-shopper-q8yh.onrender.com/removeproduct',async(req,r
 
 //Creating API for getting all products
 
-app.get('https://ecommerce-shopper-q8yh.onrender.com/allproducts',async(req,res)=>{
+app.get('/allproducts',async(req,res)=>{
     let products = await Product.find({});
     console.log("all products fetched");
     res.send(products);
@@ -159,7 +165,7 @@ const Users = mongoose.model('Users',{
 
 //Creating the endpoint for registering the user
 
-app.post('https://ecommerce-shopper-q8yh.onrender.com/signup',async(req,res)=>{
+app.post('/signup',async(req,res)=>{
     let check = await Users.findOne({email:req.body.email});
     if (check){
         return res.status(400).json({success:false,errors:"Existing account found with the same email address"})
@@ -186,7 +192,7 @@ app.post('https://ecommerce-shopper-q8yh.onrender.com/signup',async(req,res)=>{
 
 //Creating endpoint for userlogin
 
-app.post('https://ecommerce-shopper-q8yh.onrender.com/login',async(req,res)=>{
+app.post('/login',async(req,res)=>{
     let user = await Users.findOne({email:req.body.email});
     if (user) {
         passCompare = req.body.password === user.password;
@@ -210,7 +216,7 @@ app.post('https://ecommerce-shopper-q8yh.onrender.com/login',async(req,res)=>{
 
 //Creating endpoint for newcollections data
 
-app.get('https://ecommerce-shopper-q8yh.onrender.com/newcollections',async (req,res)=>{
+app.get('/newcollections',async (req,res)=>{
     let products = await Product.find({});
     let newcollection = products.slice(1).slice(-8);
     console.log('NewCollection Fetched')
@@ -225,7 +231,7 @@ app.get('https://ecommerce-shopper-q8yh.onrender.com/newcollections',async (req,
 
 //Creating endpoint for popular in women data
 
-app.get('https://ecommerce-shopper-q8yh.onrender.com/popularinwomen',async (req,res)=>{
+app.get('/popularinwomen',async (req,res)=>{
     let products = await Product.find({category:'men'});
     let popular_in_women = products.slice(0,4);
     console.log('popular in women fetched')
@@ -253,7 +259,7 @@ app.get('https://ecommerce-shopper-q8yh.onrender.com/popularinwomen',async (req,
 
 //Creating endpoint for adding products in cartdata
 
-app.post('https://ecommerce-shopper-q8yh.onrender.com/addtocart',fetchUser,async (req,res)=>{
+app.post('/addtocart',fetchUser,async (req,res)=>{
     console.log('Added',req.body.itemId)
     let userData = await Users.findOne({_id:req.user.id});
     userData.cartData[req.body.itemId] += 1;
@@ -263,7 +269,7 @@ app.post('https://ecommerce-shopper-q8yh.onrender.com/addtocart',fetchUser,async
 
 //Creating endpointfor removing from cartdata
 
-app.post('https://ecommerce-shopper-q8yh.onrender.com/removefromcart',fetchUser,async(req,res)=>{
+app.post('/removefromcart',fetchUser,async(req,res)=>{
     console.log('Removed',req.body.itemId)
     let userData = await Users.findOne({_id:req.user.id});
     if(userData.cartData[req.body.itemId]>0)
@@ -274,7 +280,7 @@ app.post('https://ecommerce-shopper-q8yh.onrender.com/removefromcart',fetchUser,
 
 //creating endpoint to get cartdata
 
-app.post('https://ecommerce-shopper-q8yh.onrender.com/getcart',fetchUser,async (req,res)=>{
+app.post('/getcart',fetchUser,async (req,res)=>{
     console.log('GetCart');
     let userData=await Users.findOne({_id:req.user.id});
     res.json(userData.cartData);
