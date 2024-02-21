@@ -13,7 +13,7 @@ const LoginSignup = () => {
     const login = async()=>{
         console.log('Login Function Executed',formdata);
         let responseData;
-        await fetch('https://shopperbackend-nr5z.onrender.com/login',{
+        await fetch('https://ecommerce-shopper-q8yh.onrender.com/login',{
             method:'POST',
             headers:{
                 Accept:'application/form-data',
@@ -32,7 +32,7 @@ const LoginSignup = () => {
     const signup = async ()=>{
         console.log("Signup Function Executed",formdata);
         let responseData;
-        await fetch('https://shopperbackend-nr5z.onrender.com/signup',{
+        await fetch('https://ecommerce-shopper-q8yh.onrender.com/signup',{
             method:'POST',
             headers:{
                 Accept:'application/form-data',
