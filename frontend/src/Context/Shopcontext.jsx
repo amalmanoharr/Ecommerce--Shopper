@@ -20,7 +20,7 @@ const ShopContextProvider = (props) => {
     //     .then((data)=>setAll_product(data))
     // },[])
     if (localStorage.getItem('auth-token')){
-        fetch('https://shopperbackend-nr5z.onrender.com/getcart',{
+        fetch('https://ecommerce-shopper-q8yh.onrender.com/getcart',{
             method:'POST',
             headers:{
                 Accept:'application/form-data',
@@ -38,7 +38,7 @@ const ShopContextProvider = (props) => {
             ...prev,[itemId]:prev[itemId]+1
         }));
         if (localStorage.getItem('auth-token')){
-            fetch('https://shopperbackend-nr5z.onrender.com/addtocart',{
+            fetch('https://ecommerce-shopper-q8yh.onrender.com/addtocart',{
                 method:'POST',
                 headers:{
                     Accept:'application/form-data',
@@ -57,7 +57,7 @@ const ShopContextProvider = (props) => {
             ...prev,[itemId]:prev[itemId]-1
         }))
         if(localStorage.getItem('auth-token')){
-            fetch('https://shopperbackend-nr5z.onrender.com/removefromcart',{
+            fetch('https://ecommerce-shopper-q8yh.onrender.com/removefromcart',{
                 method:'POST',
                 headers:{
                     Accept:'application/form-data',
